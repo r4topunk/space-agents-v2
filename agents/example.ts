@@ -6,6 +6,8 @@ import { SystemMessage } from "@langchain/core/messages";
 import { TavilySearch } from "@langchain/tavily";
 import { createSupervisor } from "@langchain/langgraph-supervisor";
 
+
+
 export const add = tool(
   async ({ a, b }: { a: number; b: number }) => a + b,
   {
@@ -22,7 +24,7 @@ export const mathAgent = createReactAgent({
   tools: [add],
   name: "math_expert",
   stateModifier: new SystemMessage(
-    "Você é um expert em matemática. Use sempre apenas **uma** tool por vez."
+    "You are a math expert. Always use only **one** tool at a time."
   ),
 });
 
@@ -43,12 +45,12 @@ const workflow = createSupervisor({
     "Delegate each message to the correct agent and give FINISH when the objective is achieved."
 });
 
-// é aqui que você pode anexar memória, checkpointer ou store se quiser
+// here you can attach memory, checkpointer or store if you want
 const app = workflow.compile({ name: "supervisor_v1" });
 
 const result = await app.invoke({
   messages: [
-    { role: "user", content: "Qual é a soma de 12 + 30?" }
+    { role: "user", content: "What is the sum of 12 + 30?" }
   ]
 });
 
