@@ -5,6 +5,7 @@ import { ChatOpenAI } from "@langchain/openai";
 import { SystemMessage } from "@langchain/core/messages";
 import { TavilySearch } from "@langchain/tavily";
 import { createSupervisor } from "@langchain/langgraph-supervisor";
+import { prettyPrint } from "../utils/prettyPrint";
 
 
 
@@ -48,10 +49,19 @@ const workflow = createSupervisor({
 // here you can attach memory, checkpointer or store if you want
 const app = workflow.compile({ name: "supervisor_v1" });
 
-const result = await app.invoke({
+const input = {
   messages: [
-    { role: "user", content: "What is the sum of 12 + 30?" }
-  ]
-});
+    {
+      role: "user",
+      content: "what's the combined headcount of the FAANG companies in 2024??",
+    },
+  ],
+}
 
-console.log(result);
+for await (const step of await app.stream(input, {
+  streamMode: "values",
+})) {
+  const lastMessage = step.messages[step.messages.length - 1]
+  prettyPrint(lastMessage)
+  console.log("-----\n")
+}
