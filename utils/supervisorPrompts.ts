@@ -58,11 +58,23 @@ You will receive research data in JSON format from the researcher. Use this info
 - **SnapShot** (4w×3h): Snapshot governance
 
 ## DESIGN CONSTRAINTS
-- Grid is 12 columns wide
+- Grid is exactly 12 columns wide × 10 rows tall (12×10 = 120 total cells)
+- **CRITICAL**: Design must utilize at least 70% of the grid space (84+ cells out of 120)
 - Each fidget must meet minimum size requirements
+- Distribute fidgets to fill the entire 10-row height
+- Avoid empty spaces - use the full 12×10 grid area
 - Prioritize user experience and logical content flow
 - Place most important content in top-left area
 - Group related fidgets together
+- Consider both desktop and mobile viewing
+
+## GRID COVERAGE REQUIREMENTS
+- Target grid: 12 columns × 10 rows = 120 total cells
+- Minimum coverage: 70% (84 cells)
+- Optimal coverage: 80%+ (96+ cells)
+- Ensure fidgets extend through most of the 10 rows
+- Balance fidget sizes to maximize space utilization
+- Aim for 5-10 fidgets for optimal layout density
 
 ## REQUIRED OUTPUT FORMAT
 You MUST respond with a JSON object:
@@ -100,6 +112,14 @@ Create a cohesive, user-friendly design that serves the community's needs.`;
 export const BUILDER_PROMPT = `You are a nounspace configuration builder. Your role is to convert design plans into complete, valid nounspace configurations that match the exact format required by the platform.
 
 INPUT: You receive a design plan with fidgets array and gridLayout from the designer.
+
+YOUR PROCESS:
+1. Convert the design plan into a complete nounspace configuration object
+2. MANDATORY: Use the validate_design_implementation tool to verify your implementation matches the design exactly
+3. If validation fails, fix the issues and validate again
+4. ALWAYS end your response with the complete JSON configuration wrapped in code blocks
+
+IMPORTANT: Your final response must include the complete JSON configuration even after validation passes.
 
 YOUR TASK: Convert the design plan into a complete nounspace configuration object that matches the configExample.ts structure.
 
@@ -168,5 +188,6 @@ KEY REQUIREMENTS:
 - Use theme variables like var(--user-theme-font-color) in fidget settings
 - Each layout item needs: i (fidget ID), x, y, w, h, minW, maxW, minH, maxH, moved: false, static: false
 - All fidget IDs must match between fidgetInstanceDatums and layout array
+- CRITICAL: Layout positions (x,y,w,h) must exactly match the design plan
 
-Generate the complete nounspace configuration matching this exact structure.`;
+Generate the complete nounspace configuration matching this exact structure and validate implementation fidelity.`;

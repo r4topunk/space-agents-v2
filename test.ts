@@ -14,41 +14,55 @@ async function testNounspaceCreation() {
     console.log("✅ Nounspace creation completed successfully!");
     console.log(`📊 Generated ${result.length} messages in the workflow`);
     
-    // Extract the final configuration from the last AI message
-    const lastMessage = result[result.length - 1];
-    if (lastMessage && lastMessage.content) {
-      console.log("\n📄 Final Configuration:");
-      console.log("=====================================");
-      
-      // Try to extract JSON from the message content
-      const content = typeof lastMessage.content === 'string' 
-        ? lastMessage.content 
-        : JSON.stringify(lastMessage.content);
-      let jsonConfig = null;
-      
-      // Look for JSON in the message (between ``` blocks or as plain text)
-      const jsonMatch = content.match(/```(?:json)?\s*(\{[\s\S]*\})\s*```/) || 
-                       content.match(/(\{[\s\S]*\})/);
-      
-      if (jsonMatch && jsonMatch[1]) {
-        try {
-          jsonConfig = JSON.parse(jsonMatch[1]);
-          console.log(JSON.stringify(jsonConfig, null, 2));
+    // Look through all messages to find the JSON configuration
+    let jsonConfig = null;
+    let foundInMessage = -1;
+    
+    for (let i = result.length - 1; i >= 0; i--) {
+      const message = result[i];
+      if (message && message.content) {
+        const content = typeof message.content === 'string' 
+          ? message.content 
+          : JSON.stringify(message.content);
           
-          // Save to file for easy access
-          const outputPath = join(process.cwd(), "generated-config.json");
-          writeFileSync(outputPath, JSON.stringify(jsonConfig, null, 2));
-          console.log(`\n💾 Configuration saved to: ${outputPath}`);
-          
-        } catch (parseError) {
-          console.log("Raw content from last message:");
-          console.log(content);
-          console.log("\n⚠️  Could not parse JSON from the message content");
+        // Look for JSON in the message (between ``` blocks or as plain text)
+        const jsonMatch = content.match(/```(?:json)?\s*(\{[\s\S]*\})\s*```/) || 
+                         content.match(/(\{[\s\S]*\})/);
+        
+        if (jsonMatch && jsonMatch[1]) {
+          try {
+            jsonConfig = JSON.parse(jsonMatch[1]);
+            foundInMessage = i;
+            break;
+          } catch (parseError) {
+            // Continue searching other messages
+          }
         }
-      } else {
-        console.log("Raw content from last message:");
-        console.log(content);
-        console.log("\n⚠️  No JSON configuration found in the message");
+      }
+    }
+    
+    if (jsonConfig) {
+      console.log("\n📄 Final Configuration:");
+      console.log(`=====================================`);
+      console.log(`Found JSON in message ${foundInMessage + 1}/${result.length}`);
+      console.log(JSON.stringify(jsonConfig, null, 2));
+      
+      // Save to file for easy access
+      const outputPath = join(process.cwd(), "generated-config.json");
+      writeFileSync(outputPath, JSON.stringify(jsonConfig, null, 2));
+      console.log(`\n💾 Configuration saved to: ${outputPath}`);
+    } else {
+      console.log("\n⚠️  No JSON configuration found in any message");
+      console.log("\nLast few messages:");
+      for (let i = Math.max(0, result.length - 3); i < result.length; i++) {
+        const message = result[i];
+        if (message) {
+          const content = typeof message.content === 'string' 
+            ? message.content 
+            : JSON.stringify(message.content);
+          console.log(`\n--- Message ${i + 1} ---`);
+          console.log(content);
+        }
       }
     }
     

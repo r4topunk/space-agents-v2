@@ -1,0 +1,299 @@
+{
+  "fidgetInstanceDatums": {
+    "text:welcome": {
+      "config": {
+        "editable": true,
+        "settings": {
+          "title": "Welcome to Crypto Traders Hub",
+          "text": "Stay informed, share insights, and track your portfolio with fellow enthusiasts.",
+          "fontColor": "#1A1A1D"
+        },
+        "data": {}
+      },
+      "fidgetType": "text",
+      "id": "text:welcome"
+    },
+    "feed:cryptoNews": {
+      "config": {
+        "editable": true,
+        "settings": {
+          "source": "twitter",
+          "filter": "keyword",
+          "value": "crypto"
+        },
+        "data": {}
+      },
+      "fidgetType": "feed",
+      "id": "feed:cryptoNews"
+    },
+    "portfolio:tracking": {
+      "config": {
+        "editable": true,
+        "settings": {
+          "title": "Track Your Portfolio",
+          "source": "CoinStats"
+        },
+        "data": {}
+      },
+      "fidgetType": "Portfolio",
+      "id": "portfolio:tracking"
+    },
+    "market:updates": {
+      "config": {
+        "editable": true,
+        "settings": {
+          "title": "Market Updates",
+          "source": "CoinDesk"
+        },
+        "data": {}
+      },
+      "fidgetType": "Market",
+      "id": "market:updates"
+    },
+    "links:resources": {
+      "config": {
+        "editable": true,
+        "settings": {
+          "title": "Useful Resources",
+          "links": [
+            {
+              "title": "CoinStats",
+              "url": "https://coinstats.app/portfolio"
+            },
+            {
+              "title": "CoinDesk",
+              "url": "https://www.coindesk.com/"
+            },
+            {
+              "title": "CryptoPanic",
+              "url": "https://cryptopanic.com/"
+            }
+          ]
+        },
+        "data": {}
+      },
+      "fidgetType": "links",
+      "id": "links:resources"
+    },
+    "Chat:community": {
+      "config": {
+        "editable": true,
+        "settings": {
+          "title": "Community Chat"
+        },
+        "data": {}
+      },
+      "fidgetType": "Chat",
+      "id": "Chat:community"
+    },
+    "gallery:tradingInsights": {
+      "config": {
+        "editable": true,
+        "settings": {
+          "title": "Trading Insights",
+          "images": [
+            "insight1.jpg",
+            "insight2.jpg"
+          ]
+        },
+        "data": {}
+      },
+      "fidgetType": "gallery",
+      "id": "gallery:tradingInsights"
+    },
+    "cast:latestPosts": {
+      "config": {
+        "editable": true,
+        "settings": {
+          "title": "Latest Posts",
+          "source": "Farcaster"
+        },
+        "data": {}
+      },
+      "fidgetType": "cast",
+      "id": "cast:latestPosts"
+    },
+    "Swap:tokenTrading": {
+      "config": {
+        "editable": true,
+        "settings": {
+          "title": "Token Trading"
+        },
+        "data": {}
+      },
+      "fidgetType": "Swap",
+      "id": "Swap:tokenTrading"
+    },
+    "Rss:newsFeed": {
+      "config": {
+        "editable": true,
+        "settings": {
+          "title": "Crypto News Feed",
+          "source": "CryptoPanic"
+        },
+        "data": {}
+      },
+      "fidgetType": "Rss",
+      "id": "Rss:newsFeed"
+    }
+  },
+  "layoutID": "crypto-traders-layout",
+  "layoutDetails": {
+    "layoutFidget": "grid",
+    "layoutConfig": {
+      "layout": [
+        {
+          "i": "text:welcome",
+          "x": 0,
+          "y": 0,
+          "w": 6,
+          "h": 2,
+          "minW": 3,
+          "maxW": 36,
+          "minH": 2,
+          "maxH": 36,
+          "moved": false,
+          "static": false
+        },
+        {
+          "i": "feed:cryptoNews",
+          "x": 6,
+          "y": 0,
+          "w": 6,
+          "h": 2,
+          "minW": 3,
+          "maxW": 36,
+          "minH": 2,
+          "maxH": 36,
+          "moved": false,
+          "static": false
+        },
+        {
+          "i": "portfolio:tracking",
+          "x": 0,
+          "y": 2,
+          "w": 6,
+          "h": 3,
+          "minW": 3,
+          "maxW": 36,
+          "minH": 2,
+          "maxH": 36,
+          "moved": false,
+          "static": false
+        },
+        {
+          "i": "market:updates",
+          "x": 6,
+          "y": 2,
+          "w": 6,
+          "h": 2,
+          "minW": 3,
+          "maxW": 36,
+          "minH": 2,
+          "maxH": 36,
+          "moved": false,
+          "static": false
+        },
+        {
+          "i": "links:resources",
+          "x": 0,
+          "y": 5,
+          "w": 4,
+          "h": 2,
+          "minW": 3,
+          "maxW": 36,
+          "minH": 2,
+          "maxH": 36,
+          "moved": false,
+          "static": false
+        },
+        {
+          "i": "Chat:community",
+          "x": 4,
+          "y": 5,
+          "w": 4,
+          "h": 2,
+          "minW": 3,
+          "maxW": 36,
+          "minH": 2,
+          "maxH": 36,
+          "moved": false,
+          "static": false
+        },
+        {
+          "i": "gallery:tradingInsights",
+          "x": 8,
+          "y": 5,
+          "w": 4,
+          "h": 2,
+          "minW": 3,
+          "maxW": 36,
+          "minH": 2,
+          "maxH": 36,
+          "moved": false,
+          "static": false
+        },
+        {
+          "i": "cast:latestPosts",
+          "x": 0,
+          "y": 7,
+          "w": 3,
+          "h": 3,
+          "minW": 3,
+          "maxW": 36,
+          "minH": 2,
+          "maxH": 36,
+          "moved": false,
+          "static": false
+        },
+        {
+          "i": "Swap:tokenTrading",
+          "x": 3,
+          "y": 7,
+          "w": 3,
+          "h": 3,
+          "minW": 3,
+          "maxW": 36,
+          "minH": 2,
+          "maxH": 36,
+          "moved": false,
+          "static": false
+        },
+        {
+          "i": "Rss:newsFeed",
+          "x": 6,
+          "y": 7,
+          "w": 6,
+          "h": 3,
+          "minW": 3,
+          "maxW": 36,
+          "minH": 2,
+          "maxH": 36,
+          "moved": false,
+          "static": false
+        }
+      ]
+    }
+  },
+  "isEditable": true,
+  "fidgetTrayContents": [],
+  "theme": {
+    "id": "crypto-theme",
+    "name": "Crypto Theme",
+    "properties": {
+      "font": "Inter",
+      "fontColor": "#1A1A1D",
+      "headingsFont": "Roboto",
+      "headingsFontColor": "#4E4E50",
+      "background": "linear-gradient(45deg, #1A1A1D 0%, #4E4E50 50%, #1A1A1D 100%)",
+      "backgroundHTML": "",
+      "musicURL": "",
+      "fidgetBackground": "rgba(30, 100, 150, 0.95)",
+      "fidgetBorderWidth": "1px",
+      "fidgetBorderColor": "#00ffff",
+      "fidgetShadow": "0 0 20px rgba(0, 255, 255, 0.5)",
+      "fidgetBorderRadius": "12px",
+      "gridSpacing": "16"
+    }
+  }
+}

@@ -64,15 +64,107 @@ export const validateDesign = tool(
         }
       }
       
-      return "Design plan is valid and meets requirements.";
+      // Calculate grid coverage to ensure design fills the 12x10 space
+      const gridWidth = 12;
+      const gridHeight = 10; // Fixed 10 rows for 12x10 grid
+      const totalGridCells = gridWidth * gridHeight; // 120 cells
+      
+      let occupiedCells = 0;
+      let maxRowUsed = 0;
+      
+      for (const fidget of parsed.fidgets) {
+        occupiedCells += fidget.position.width * fidget.position.height;
+        maxRowUsed = Math.max(maxRowUsed, fidget.position.y + fidget.position.height);
+      }
+      
+      const coveragePercentage = (occupiedCells / totalGridCells) * 100;
+      
+      if (coveragePercentage < 60) {
+        return `Grid coverage too low: ${coveragePercentage.toFixed(1)}% of 12×10 grid. Design must cover at least 60% (72+ cells out of 120). Add more fidgets or increase existing fidget sizes to fill the space better.`;
+      }
+      
+      // Check if design utilizes the full 10-row height
+      if (maxRowUsed < 8) {
+        return `Design only uses ${maxRowUsed} rows out of 10. Please extend fidgets to use more of the vertical space in the 12×10 grid. Target: use at least 8-10 rows.`;
+      }
+      
+      if (coveragePercentage < 70) {
+        return `Grid coverage could be improved: ${coveragePercentage.toFixed(1)}% of 12×10 grid. Consider adding more content or expanding existing fidgets to better fill the 120-cell space. Target: 70%+ (84+ cells).`;
+      }
+      
+      return `Design plan is valid with ${coveragePercentage.toFixed(1)}% coverage of 12×10 grid (${occupiedCells} cells out of 120). Layout meets requirements and uses ${maxRowUsed} rows.`;
     } catch (error) {
       return `Invalid JSON format: ${error}`;
     }
   },
   {
     name: "validate_design",
-    description: "Validates design plan format and constraints",
+    description: "Validates design plan format, constraints, and grid coverage",
     schema: z.object({ data: z.string() })
+  }
+);
+
+// New validation tool to check if builder properly implements the design
+export const validateDesignImplementation = tool(
+  async ({ designData, configData }: { designData: string, configData: string }) => {
+    try {
+      const design = JSON.parse(designData) as DesignPlan;
+      const config = JSON.parse(configData) as any;
+      
+      // Check if all designed fidgets are implemented
+      const designFidgetIds = design.fidgets.map(f => f.id);
+      const configFidgetIds = Object.keys(config.fidgetInstanceDatums || {});
+      
+      const missingFidgets = designFidgetIds.filter(id => !configFidgetIds.includes(id));
+      if (missingFidgets.length > 0) {
+        return `Missing fidgets in implementation: ${missingFidgets.join(', ')}. All designed fidgets must be included in the final configuration.`;
+      }
+      
+      const extraFidgets = configFidgetIds.filter(id => !designFidgetIds.includes(id));
+      if (extraFidgets.length > 0) {
+        return `Extra fidgets in implementation: ${extraFidgets.join(', ')}. Only designed fidgets should be included.`;
+      }
+      
+      // Check if layout positions match the design
+      const layoutItems = config.layoutDetails?.layoutConfig?.layout || [];
+      for (const designFidget of design.fidgets) {
+        const layoutItem = layoutItems.find((item: any) => item.i === designFidget.id);
+        if (!layoutItem) {
+          return `Layout missing for fidget: ${designFidget.id}`;
+        }
+        
+        // Check if positions are reasonably close (allow some flexibility)
+        const positionMatches = 
+          layoutItem.x === designFidget.position.x &&
+          layoutItem.y === designFidget.position.y &&
+          layoutItem.w === designFidget.position.width &&
+          layoutItem.h === designFidget.position.height;
+          
+        if (!positionMatches) {
+          return `Position mismatch for ${designFidget.id}. Design: (${designFidget.position.x},${designFidget.position.y},${designFidget.position.width}×${designFidget.position.height}) vs Implementation: (${layoutItem.x},${layoutItem.y},${layoutItem.w}×${layoutItem.h})`;
+        }
+      }
+      
+      // Check fidget types match
+      for (const designFidget of design.fidgets) {
+        const configFidget = config.fidgetInstanceDatums[designFidget.id];
+        if (configFidget.fidgetType !== designFidget.type) {
+          return `Type mismatch for ${designFidget.id}. Design: ${designFidget.type} vs Implementation: ${configFidget.fidgetType}`;
+        }
+      }
+      
+      return "✅ Builder implementation perfectly matches the design plan. All fidgets, positions, and types are correctly implemented.";
+    } catch (error) {
+      return `Error validating design implementation: ${error}`;
+    }
+  },
+  {
+    name: "validate_design_implementation", 
+    description: "Validates that the builder correctly implemented the designer's plan",
+    schema: z.object({ 
+      designData: z.string().describe("The JSON design plan from the designer"),
+      configData: z.string().describe("The JSON configuration from the builder")
+    })
   }
 );
 
@@ -136,7 +228,7 @@ const designerAgent = createReactAgent({
 
 const builderAgent = createReactAgent({
   llm,
-  tools: [validateConfig],
+  tools: [validateConfig, validateDesignImplementation],
   name: "builder",
   stateModifier: new SystemMessage(BUILDER_PROMPT),
 });
@@ -147,21 +239,27 @@ const workflow = createSupervisor({
   prompt: `You are the supervisor of a nounspace creation team with three specialists:
 
 1. **RESEARCHER**: Gathers information and provides structured research data
-2. **DESIGNER**: Creates layout plans with fidget positioning and settings  
-3. **BUILDER**: Generates final JSON configuration for the nounspace
+2. **DESIGNER**: Creates layout plans with optimal grid coverage and fidget positioning  
+3. **BUILDER**: Generates final JSON configuration and validates design implementation
 
-## WORKFLOW
+## ENHANCED WORKFLOW
 1. Start with RESEARCHER to gather comprehensive information
 2. Pass research results to DESIGNER to create layout plan
-3. Pass design plan to BUILDER to generate final configuration
-4. Use FINISH when the complete JSON configuration is ready
+3. DESIGNER must validate their design meets grid coverage requirements (60%+ coverage)
+4. Pass design plan to BUILDER to generate final configuration
+5. BUILDER must validate that their implementation matches the design exactly
+6. BUILDER must output the complete JSON configuration in their final response
+7. Use FINISH only when both design validation, implementation validation pass, AND the JSON is provided
 
 ## QUALITY CONTROL
-- Each agent has validation tools to ensure output quality
-- Ensure data flows properly between agents
-- Verify final output is valid before finishing
+- Designer validates grid coverage and space utilization
+- Builder validates design implementation fidelity
+- Each agent has specialized validation tools
+- Ensure designs fill the grid effectively (no large empty spaces)
+- Verify final output matches design specifications exactly
+- CRITICAL: The final response must contain the complete JSON configuration
 
-Delegate tasks strategically and ensure high-quality results at each step.`,
+Delegate tasks strategically and ensure the BUILDER provides the complete JSON configuration before finishing.`,
 });
 
 // Compile with error handling and checkpointing support
