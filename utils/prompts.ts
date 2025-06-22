@@ -1,301 +1,3 @@
-
-export const FIDGET_CONTEXT_CATALOG_BUILDER = `
-// Example Fidget configuration data used for prompt context.
-// This mirrors the shape of "fidgetInstanceDatums" in a SpaceConfig.
-
-export interface ExampleFidgetConfig {{
-  editable: boolean;
-  settings: Record<string, unknown>;
-  data: Record<string, unknown>;
-}}
-
-export interface ExampleFidgetInstance {{
-  config: ExampleFidgetConfig;
-  fidgetType: string;
-  id: string;
-}}
-
-/**
- * FIDGET_CONFIG_GUIDE provides sample settings for each Fidget.
- * Comments describe what the Fidget does and give example inputs.
- */
-export const FIDGET_CONFIG_GUIDE: Record<string, ExampleFidgetInstance> = {{
-  // Feed Fidget - displays casts from Farcaster or posts from X
-  "feed:example": {{
-    config: {{
-      editable: true,
-      settings: {{
-        feedType: "following",
-        filterType: "keyword",
-        keyword: "nouns",
-        showOnMobile: true,
-      }},
-      data: {{}},
-    }},
-    fidgetType: "feed",
-    id: "feed:example",
-  }},
-
-  // Cast Fidget - pins a single Farcaster cast
-  "cast:example": {{
-    config: {{
-      editable: true,
-      settings: {{
-        castUrl: "https://farcaster.xyz/~/post/0x123",
-        casterFid: 1234,
-      }},
-      data: {{}},
-    }},
-    fidgetType: "cast",
-    id: "cast:example",
-  }},
-
-  // Gallery Fidget - displays an image or NFT
-  "gallery:example": {{
-    config: {{
-      editable: true,
-      settings: {{
-        imageUrl: "<URL>",
-        selectMediaSource: {{ name: "URL" }},
-        // Scale: resize multiplier 0.5 - 2
-        Scale: 1,
-      }},
-      data: {{}},
-    }},
-    fidgetType: "gallery",
-    id: "gallery:example",
-  }},
-
-  // Text Fidget - renders Markdown text
-  "text:example": {{
-    config: {{
-      editable: true,
-      settings: {{
-        title: "Welcome",
-        text: "Hello **nounspace**",
-        urlColor: "#0000FF",
-      }},
-      data: {{}},
-    }},
-    fidgetType: "text",
-    id: "text:example",
-  }},
-
-  // Links Fidget - list of external links
-  "links:example": {{
-    config: {{
-      editable: true,
-      settings: {{
-        title: "Resources",
-        links: [{{ text: "Nounspace", url: "https://nounspace.com" }}],
-        viewMode: "list",
-      }},
-      data: {{}},
-    }},
-    fidgetType: "links",
-    id: "links:example",
-  }},
-
-  // IFrame Fidget - embeds a webpage
-  "iframe:example": {{
-    config: {{
-      editable: true,
-      settings: {{
-        url: "https://example.com",
-        // size: scale factor 0.5 - 2
-        size: 1,
-      }},
-      data: {{}},
-    }},
-    fidgetType: "iframe",
-    id: "iframe:example",
-  }},
-
-  // Swap Fidget - token swap widget
-  "Swap:example": {{
-    config: {{
-      editable: true,
-      settings: {{
-        defaultSellToken: "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
-        defaultBuyToken: "0x48c6740bcf807d6c47c864faeea15ed4da3910ab",
-      }},
-      data: {{}},
-    }},
-    fidgetType: "Swap",
-    id: "Swap:example",
-  }},
-
-  // Chat Fidget - realtime chat room
-  "Chat:example": {{
-    config: {{
-      editable: true,
-      settings: {{
-        roomName: "0x48C6740BcF807d6C47C864FaEEA15Ed4dA3910Ab",
-      }},
-      data: {{}},
-    }},
-    fidgetType: "Chat",
-    id: "Chat:example",
-  }},
-
-  // SnapShot Fidget - shows Snapshot proposals
-  "SnapShot:example": {{
-    config: {{
-      editable: true,
-      settings: {{
-        snapshotEns: "gnars.eth",
-        daoContractAddress: "0x0000000000000000000000000000000000000000",
-      }},
-      data: {{}},
-    }},
-    fidgetType: "SnapShot",
-    id: "SnapShot:example",
-  }},
-
-  // Video Fidget - embeds a video player
-  "Video:example": {{
-    config: {{
-      editable: true,
-      settings: {{
-        url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
-        size: 1,
-      }},
-      data: {{}},
-    }},
-    fidgetType: "Video",
-    id: "Video:example",
-  }},
-
-  // RSS Fidget - displays items from an RSS feed
-  "Rss:example": {{
-    config: {{
-      editable: true,
-      settings: {{
-        title: "News",
-        rssUrl: "https://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml",
-      }},
-      data: {{}},
-    }},
-    fidgetType: "Rss",
-    id: "Rss:example",
-  }},
-}};
-`;
-export const FIDGET_CONTEXT_CATALOG_PLANNER = `
-## AVAILABLE FIDGET TYPES
-
-**text** - Rich text content with markdown support
-- **Purpose**: Announcements, welcome messages, formatted content, documentation
-- **Key Settings**: title, text (markdown), fontFamily, fontColor, headingsFontFamily, headingsFontColor, urlColor
-- **Minimum Size**: 3w × 2h
-- **Common Use**: Hero sections, content blocks, instructions
-
-**gallery** - Display images from various sources
-- **Purpose**: Photo galleries, NFT showcases, image collections, visual content
-- **Key Settings**: selectMediaSource (URL/Upload/NFT), imageUrl, uploadedImage, nftSelector, scale, redirectionURL, badgeColor
-- **Sources**: Direct URL, file upload, or NFT from blockchain
-- **Minimum Size**: 2w × 2h
-- **Common Use**: Profile pictures, artwork displays, visual portfolios
-
-**Video** - YouTube, Vimeo, and video embeds
-- **Purpose**: Video content, tutorials, entertainment, presentations
-- **Key Settings**: url (auto-converts YouTube/Vimeo URLs), size (scale)
-- **Auto-conversion**: Automatically converts YouTube/Vimeo URLs to embeddable format
-- **Minimum Size**: 2w × 2h
-- **Common Use**: Educational content, entertainment, demos
-
-### Social & Communication Fidgets
-**feed** - Farcaster social feeds with advanced filtering
-- **Purpose**: Social media streams, community content, trending posts
-- **Key Settings**: feedType (Following/Filter), filterType (Channel/Users/Keyword), channel, username, keyword, selectPlatform (Farcaster/X), Xhandle, membersOnly
-- **Feed Types**: Following (personalized), Filter (by criteria)
-- **Filter Options**: Channel feeds, user posts, keyword searches
-- **Platform Support**: Farcaster and X (Twitter)
-- **Minimum Size**: 4w × 2h
-- **Common Use**: Community feeds, social walls, content discovery
-
-**cast** - Pin individual Farcaster posts
-- **Purpose**: Highlight specific posts, feature announcements, showcase content
-- **Key Settings**: castUrl (easiest), castHash + casterFid (advanced)
-- **Input Methods**: Warpcast share URL or manual hash/FID
-- **Minimum Size**: 3w × 1h, Maximum Height: 4h
-- **Common Use**: Featured posts, announcements, pinned content
-
-**Chat** - Interactive messaging interfaces
-- **Purpose**: Real-time communication, community discussions
-- **Minimum Size**: 3w × 2h
-- **Common Use**: Live support, community chat, messaging
-
-**iframe** (Web Embed) - Embed external websites and tools
-- **Purpose**: Integration with external tools, dashboards, web applications
-- **Key Settings**: url, size (zoom level)
-- **Security**: Automatically sanitizes URLs and blocks malicious content
-- **Minimum Size**: 2w × 2h
-- **Common Use**: External tools, dashboards, web apps, embedded services
-
-**frame** - Legacy Farcaster frames
-- **Purpose**: Interactive Farcaster applications, simple web experiences
-- **Key Settings**: url
-- **Minimum Size**: 2w × 2h
-- **Common Use**: Simple interactive content, legacy frame apps
-
-**FramesV2** (Farcaster Mini App) - Next-generation interactive frames
-- **Purpose**: Advanced interactive applications, mini-apps, rich experiences
-- **Key Settings**: url, collapsed/expanded (preview mode), title, headingFont
-- **Display Modes**: Full app or collapsed preview
-- **Minimum Size**: 2w × 2h
-- **Common Use**: Interactive apps, games, advanced tools
-
-**links** - Organized link collections with rich display options
-- **Purpose**: Navigation, resource collections, social media links, quick access
-- **Key Settings**: title, links (array with text/url/avatar/description), viewMode (list/grid), itemBackground, scale
-- **Display Options**: List or grid layout with avatars and descriptions
-- **Link Properties**: Text, URL, optional avatar image, optional description
-- **Minimum Size**: 2w × 2h
-- **Common Use**: Social links, resource lists, navigation menus
-
-**Rss** - RSS feed readers for external content
-- **Purpose**: News feeds, blog content, external content aggregation
-- **Key Settings**: rssUrl, fontFamily, fontColor, headingsFontFamily, headingsFontColor
-- **Content**: Automatically fetches and displays RSS feed items
-- **Minimum Size**: 3w × 2h
-- **Common Use**: News feeds, blog aggregation, content curation
-
-**Swap** - Cryptocurrency trading interfaces
-- **Purpose**: Token swapping, DeFi interactions, trading
-- **Key Settings**: defaultSellToken, defaultBuyToken, fromChain, toChain, background, fontFamily, fontColor, swapScale, optionalFeeRecipient
-- **Chain Support**: Multi-chain token swapping
-- **Minimum Size**: 3w × 3h
-- **Common Use**: DEX interfaces, token trading, DeFi integration
-
-**Portfolio** - Cryptocurrency portfolio tracking
-- **Purpose**: Wallet tracking, portfolio analytics, asset monitoring
-- **Key Settings**: trackType (farcaster/address), farcasterUsername, walletAddresses
-- **Tracking Methods**: By Farcaster username or wallet addresses
-- **Minimum Size**: 3w × 3h
-- **Common Use**: Portfolio dashboards, asset tracking, wallet monitoring
-
-**Market** - Cryptocurrency market data and pricing
-- **Purpose**: Price displays, market information, trading data
-- **Minimum Size**: 3w × 2h
-- **Common Use**: Price tickers, market overviews, trading dashboards
-
-**governance** - DAO proposals and voting interfaces
-- **Purpose**: Governance participation, proposal viewing, voting
-- **Minimum Size**: 4w × 3h
-- **Common Use**: DAO dashboards, voting interfaces, governance oversight
-
-**SnapShot** - Snapshot governance integration
-- **Purpose**: Snapshot proposal viewing and voting
-- **Minimum Size**: 4w × 3h
-- **Common Use**: Decentralized governance, community voting
-
-**profile** - User profile displays (development only)
-- **Purpose**: User information, profile cards, identity display
-- **Availability**: Development environment only
-- **Common Use**: Profile showcases, user cards, identity verification
-`;
-
 export const SINGLE_WORKER_SYSTEM_PROMPT = `
 You are the **Nounspace Space Builder Agent** - a comprehensive AI system that creates complete space configurations based on user requests.
 
@@ -305,8 +7,6 @@ Transform user_request into valid, complete Nounspace space configuration JSON o
 ## CORE CAPABILITIES
 - **Design**: Select appropriate fidgets and arrange them optimally on a 12-column x 8-row grid
 - **Build**: Generate complete, valid space configuration JSON
-
-${FIDGET_CONTEXT_CATALOG_BUILDER}
 
 ## GRID SYSTEM RULES
 - **12-column × 8-row grid** (x: 0-11, y: 0-7)
@@ -891,6 +591,65 @@ Warm and Optimistic: Approach every interaction with enthusiasm and belief in th
 Entrepreneur at Heart: Frame your messages around the "ROI" (Return On Investment) of community engagement, emphasizing shared success and collective growth.
 Informal and Approachable: Speak directly to individuals, use storytelling, and avoid overly corporate jargon.
 Thought-Provoking: Encourage critical thinking and reflection on the role of technology in shaping human connection.
+`;
+
+// Simple fidget catalog for planning system
+export const FIDGET_CONTEXT_CATALOG_PLANNER = `
+## AVAILABLE FIDGET TYPES
+
+**text** - Rich text content with markdown support
+- Minimum Size: 3w × 2h
+- Settings: title, text (markdown), fontFamily, fontColor, headingsFontFamily, headingsFontColor, urlColor
+
+**gallery** - Display images from various sources  
+- Minimum Size: 2w × 2h
+- Settings: selectMediaSource (URL/Upload/NFT), imageUrl, scale, redirectionURL
+
+**Video** - YouTube, Vimeo, and video embeds
+- Minimum Size: 2w × 2h
+- Settings: url (auto-converts YouTube/Vimeo URLs), size (scale)
+
+**feed** - Social media feeds with advanced filtering
+- Minimum Size: 4w × 2h
+- Settings: feedType (Following/Filter), filterType (Channel/Users/Keyword), channel, username, keyword, selectPlatform (Farcaster/X)
+
+**cast** - Pin individual Farcaster posts
+- Minimum Size: 3w × 1h, Maximum Height: 4h
+- Settings: castUrl (easiest), castHash + casterFid (advanced)
+
+**Chat** - Interactive messaging interfaces
+- Minimum Size: 3w × 2h
+- Settings: roomName
+
+**iframe** - Embed external websites and tools
+- Minimum Size: 2w × 2h
+- Settings: url, size (zoom level)
+
+**links** - Organized link collections with rich display options
+- Minimum Size: 2w × 2h
+- Settings: title, links (array with text/url/avatar/description), viewMode (list/grid)
+
+**Rss** - RSS feed readers for external content
+- Minimum Size: 3w × 2h
+- Settings: rssUrl, fontFamily, fontColor, headingsFontFamily, headingsFontColor
+
+**Swap** - Cryptocurrency trading interfaces
+- Minimum Size: 3w × 3h
+- Settings: defaultSellToken, defaultBuyToken, fromChain, toChain
+
+**Portfolio** - Cryptocurrency portfolio tracking
+- Minimum Size: 3w × 3h
+- Settings: trackType (farcaster/address), farcasterUsername, walletAddresses
+
+**Market** - Cryptocurrency market data and pricing
+- Minimum Size: 3w × 2h
+
+**governance** - DAO proposals and voting interfaces
+- Minimum Size: 4w × 3h
+
+**SnapShot** - Snapshot governance integration
+- Minimum Size: 4w × 3h
+- Settings: snapshotEns, daoContractAddress
 `;
 
 export const PLANING_SYSTEM = `
