@@ -1,36 +1,55 @@
-import { ChatOpenAI } from "@langchain/openai";
-import { MemorySaver } from "@langchain/langgraph";
-import { HumanMessage } from "@langchain/core/messages";
+import { tool } from "@langchain/core/tools";
+import { z } from "zod";
 import { createReactAgent } from "@langchain/langgraph/prebuilt";
+import { ChatOpenAI } from "@langchain/openai";
+import { SystemMessage } from "@langchain/core/messages";
 import { TavilySearch } from "@langchain/tavily";
+import { createSupervisor } from "@langchain/langgraph-supervisor";
 
-// Define the tools for the agent to use
-const agentTools = [new TavilySearch({ maxResults: 3 })];
-const agentModel = new ChatOpenAI({ temperature: 0 });
+export const add = tool(
+  async ({ a, b }: { a: number; b: number }) => a + b,
+  {
+    name: "add",
+    description: "Add two numbers",
+    schema: z.object({ a: z.number(), b: z.number() })
+  }
+);
 
-// Initialize memory to persist state between graph runs
-const agentCheckpointer = new MemorySaver();
-const agent = createReactAgent({
-  llm: agentModel,
-  tools: agentTools,
-  checkpointSaver: agentCheckpointer,
+const llm = new ChatOpenAI({ model: "gpt-4o" });
+
+export const mathAgent = createReactAgent({
+  llm,
+  tools: [add],
+  name: "math_expert",
+  stateModifier: new SystemMessage(
+    "Você é um expert em matemática. Use sempre apenas **uma** tool por vez."
+  ),
 });
 
-// Now it's time to use!
-const agentFinalState = await agent.invoke(
-  { messages: [new HumanMessage("what is the current weather in sf")] },
-  { configurable: { thread_id: "42" } },
-);
+export const researchAgent = createReactAgent({
+  llm,
+  tools: [new TavilySearch()],
+  name: "research_expert",
+  stateModifier: new SystemMessage(
+    "You are a research and *don't* do math"
+  ),
+});
 
-console.log(
-  agentFinalState.messages?.[agentFinalState.messages.length - 1]?.content,
-);
+const workflow = createSupervisor({
+  agents: [researchAgent, mathAgent],
+  llm,
+  prompt:
+    "You are the supervisor of a team with a researcher and a math expert. " +
+    "Delegate each message to the correct agent and give FINISH when the objective is achieved."
+});
 
-const agentNextState = await agent.invoke(
-  { messages: [new HumanMessage("what about ny")] },
-  { configurable: { thread_id: "42" } },
-);
+// é aqui que você pode anexar memória, checkpointer ou store se quiser
+const app = workflow.compile({ name: "supervisor_v1" });
 
-console.log(
-  agentNextState.messages?.[agentNextState.messages.length - 1]?.content,
-);
+const result = await app.invoke({
+  messages: [
+    { role: "user", content: "Qual é a soma de 12 + 30?" }
+  ]
+});
+
+console.log(result);
