@@ -1,4 +1,4 @@
-import { createNounspace } from "./agents/example";
+import { createNounspace } from "./index";
 import { writeFileSync } from "fs";
 import { join } from "path";
 
