@@ -1,17 +1,17 @@
-import { createNounspace } from "./index";
+import { createSpace } from "./index";
 import { writeFileSync } from "fs";
 import { join } from "path";
 
-// Test the improved nounspace creation system
-async function testNounspaceCreation() {
+// Test the improved space creation system
+async function testSpaceCreation() {
   try {
-    console.log("🚀 Starting nounspace creation test...\n");
+    console.log("🚀 Starting space creation test...\n");
     
-    const userRequest = "Create a nounspace for a community of crypto traders who want to track their portfolios, share trading insights, and stay updated with market news";
+    const userRequest = "Create a space for a community of crypto traders who want to track their portfolios, share trading insights, and stay updated with market news";
     
-    const result = await createNounspace(userRequest);
+    const result = await createSpace(userRequest);
     
-    console.log("✅ Nounspace creation completed successfully!");
+    console.log("✅ Space creation completed successfully!");
     console.log(`📊 Generated ${result.length} messages in the workflow`);
     
     // Look through all messages to find the JSON configuration
@@ -67,11 +67,11 @@ async function testNounspaceCreation() {
     }
     
   } catch (error) {
-    console.error("❌ Error during nounspace creation:", error);
+    console.error("❌ Error during space creation:", error);
   }
 }
 
 // Uncomment to run the test
-testNounspaceCreation();
+testSpaceCreation();
 
-export { testNounspaceCreation };
+export { testSpaceCreation };

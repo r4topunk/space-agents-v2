@@ -46,7 +46,7 @@ const config = {
         "settings": {
           "feedType": "filter",
           "filterType": "channel_id",
-          "channel": "nounspace",
+          "channel": "community",
           "selectPlatform": {"name": "Farcaster", "icon": "/images/farcaster.jpeg"},
           "background": "var(--user-theme-fidget-background)",
           "showOnMobile": true

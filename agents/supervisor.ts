@@ -5,7 +5,7 @@ import { createDesignerAgent } from "./designer";
 import { createBuilderAgent } from "./builder";
 
 // Supervisor prompt
-export const SUPERVISOR_PROMPT = `You are the supervisor of a nounspace creation team with three specialists:
+export const SUPERVISOR_PROMPT = `You are the supervisor of a space creation team for the Blank Space platform with three specialists:
 
 1. **RESEARCHER**: Gathers information and provides structured research data
 2. **DESIGNER**: Creates layout plans with optimal grid coverage and fidget positioning  

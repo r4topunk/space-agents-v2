@@ -1,6 +1,6 @@
 # Agents Directory
 
-This directory contains the modular agent architecture for the nounspace creation system. Each agent is now in its own file with its specific prompt and tools included.
+This directory contains the modular agent architecture for the space creation system on the Blank Space platform. Each agent is now in its own file with its specific prompt and tools included.
 
 ## File Structure
 
@@ -16,7 +16,7 @@ This directory contains the modular agent architecture for the nounspace creatio
   - Exports `createDesignerAgent()` function
 
 - **`builder.ts`** - Builder agent with prompt and validation tools
-  - Converts design plans to complete nounspace configurations
+  - Converts design plans to complete space configurations
   - Validates design implementation fidelity
   - Exports `createBuilderAgent()` function
 
@@ -32,9 +32,9 @@ This directory contains the modular agent architecture for the nounspace creatio
 
 ### New Modular Approach (Recommended)
 ```typescript
-import { createNounspace } from "../index";
+import { createSpace } from "../index";
 
-const result = await createNounspace("Create a nounspace for dog lovers");
+const result = await createSpace("Create a space for dog lovers");
 ```
 
 ### Direct Agent Usage

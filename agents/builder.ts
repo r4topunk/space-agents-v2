@@ -6,23 +6,23 @@ import { SystemMessage } from "@langchain/core/messages";
 import { 
   VALID_FIDGET_TYPES,
   type DesignPlan,
-  type NounspaceConfig 
+  type SpaceConfig 
 } from "../types/agentTypes";
 
 // Builder prompt
-export const BUILDER_PROMPT = `You are a nounspace configuration builder. Your role is to convert design plans into complete, valid nounspace configurations that match the exact format required by the platform.
+export const BUILDER_PROMPT = `You are a space configuration builder for the Blank Space platform. Your role is to convert design plans into complete, valid space configurations that match the exact format required by the platform.
 
 INPUT: You receive a design plan with fidgets array and gridLayout from the designer.
 
 YOUR PROCESS:
-1. Convert the design plan into a complete nounspace configuration object
+1. Convert the design plan into a complete space configuration object
 2. MANDATORY: Use the validate_design_implementation tool to verify your implementation matches the design exactly
 3. If validation fails, fix the issues and validate again
 4. ALWAYS end your response with the complete JSON configuration wrapped in code blocks
 
 IMPORTANT: Your final response must include the complete JSON configuration even after validation passes.
 
-YOUR TASK: Convert the design plan into a complete nounspace configuration object that matches the configExample.ts structure.
+YOUR TASK: Convert the design plan into a complete space configuration object that matches the configExample.ts structure.
 
 REQUIRED OUTPUT FORMAT: Return ONLY a valid JSON object with this EXACT structure:
 
@@ -91,7 +91,7 @@ KEY REQUIREMENTS:
 - All fidget IDs must match between fidgetInstanceDatums and layout array
 - CRITICAL: Layout positions (x,y,w,h) must exactly match the design plan
 
-Generate the complete nounspace configuration matching this exact structure and validate implementation fidelity.`;
+Generate the complete space configuration matching this exact structure and validate implementation fidelity.`;
 
 // Validation tool to check if builder properly implements the design
 export const validateDesignImplementation = tool(
@@ -161,7 +161,7 @@ export const validateDesignImplementation = tool(
 export const validateConfig = tool(
   async ({ data }: { data: string }) => {
     try {
-      const parsed = JSON.parse(data) as NounspaceConfig;
+      const parsed = JSON.parse(data) as SpaceConfig;
       
       if (!Array.isArray(parsed)) {
         return "Configuration must be an array of fidget instances.";
@@ -190,7 +190,7 @@ export const validateConfig = tool(
   },
   {
     name: "validate_config",
-    description: "Validates final nounspace configuration",
+    description: "Validates final space configuration",
     schema: z.object({ data: z.string() })
   }
 );

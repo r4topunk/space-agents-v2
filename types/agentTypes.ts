@@ -1,4 +1,4 @@
-// Type definitions for agent communication and nounspace configuration
+// Type definitions for agent communication and space configuration
 
 export interface ResearchData {
   summary: string;
@@ -58,7 +58,7 @@ export interface FidgetInstanceDatum {
   id: string;
 }
 
-export type NounspaceConfig = FidgetInstanceDatum[];
+export type SpaceConfig = FidgetInstanceDatum[];
 
 // Valid fidget types for validation
 export const VALID_FIDGET_TYPES = [

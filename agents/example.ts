@@ -19,7 +19,7 @@ const llm = new ChatOpenAI({
 
 const workflow = createSupervisorWorkflow(llm);
 const app = workflow.compile({ 
-  name: "nounspace_supervisor_legacy",
+  name: "blank_space_supervisor_legacy",
   checkpointer: undefined
 });
 
@@ -28,13 +28,13 @@ const input = {
   messages: [
     {
       role: "user",
-      content: "Create a nounspace for a community of dog lovers who are active on Farcaster and interested in dog training, sharing photos of their pets, and connecting with other dog enthusiasts.",
+      content: "Create a space for a community of dog lovers who are active on Farcaster and interested in dog training, sharing photos of their pets, and connecting with other dog enthusiasts.",
     },
   ],
 };
 
 // Main execution function using modular agents
-export async function createNounspace(userRequest: string) {
+export async function createSpace(userRequest: string) {
   try {
     const result = [];
     
@@ -51,7 +51,7 @@ export async function createNounspace(userRequest: string) {
     
     return result;
   } catch (error) {
-    console.error("Error creating nounspace:", error);
+    console.error("Error creating space:", error);
     throw error;
   }
 }

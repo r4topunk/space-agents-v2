@@ -10,7 +10,7 @@ import {
 } from "../types/agentTypes";
 
 // Designer prompt
-export const DESIGNER_PROMPT = `You are a nounspace layout designer. Your role is to create optimal grid layouts using available fidgets.
+export const DESIGNER_PROMPT = `You are a space layout designer for the Blank Space platform. Your role is to create optimal grid layouts using available fidgets.
 
 ## INPUT
 You will receive research data in JSON format from the researcher. Use this information to design the space.

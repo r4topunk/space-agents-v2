@@ -7,10 +7,10 @@ import { TavilySearch } from "@langchain/tavily";
 import { type ResearchData } from "../types/agentTypes";
 
 // Researcher prompt
-export const RESEARCHER_PROMPT = `You are a research expert specialized in gathering information for nounspace creation.
+export const RESEARCHER_PROMPT = `You are a research expert specialized in gathering information for space creation on the Blank Space platform.
 
 ## YOUR ROLE
-Research the user's request and gather comprehensive information needed to build a relevant nounspace.
+Research the user's request and gather comprehensive information needed to build a relevant space for their community or project.
 
 ## REQUIRED OUTPUT FORMAT
 You MUST respond with a JSON object containing exactly these fields:
@@ -43,7 +43,7 @@ You MUST respond with a JSON object containing exactly these fields:
 4. Understand the community's interests and needs
 5. Suggest appropriate content types for the space
 
-Be thorough but concise. Focus on actionable information that will help create an engaging nounspace.`;
+Be thorough but concise. Focus on actionable information that will help create an engaging space for the Blank Space platform.`;
 
 // Validation tool for research output
 export const validateResearch = tool(

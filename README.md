@@ -1,6 +1,6 @@
-# Space Agents V2 - High-Performance Nounspace Builder
+# Space Agents V2 - High-Performance Blank Space Builder
 
-A sophisticated multi-agent system for automatically generating nounspace configurations using LangChain and OpenAI.
+A sophisticated multi-agent system for automatically generating space configurations for the Blank Space platform using LangChain and OpenAI.
 
 ## 🏗️ Architecture
 
@@ -8,7 +8,7 @@ The system uses a **supervised multi-agent architecture** with three specialized
 
 1. **🔍 Researcher Agent**: Gathers comprehensive information about the requested community/topic
 2. **🎨 Designer Agent**: Creates optimal grid layouts using available fidgets (widgets)  
-3. **⚙️ Builder Agent**: Generates final JSON configuration for the nounspace
+3. **⚙️ Builder Agent**: Generates final JSON configuration for the space
 
 ## 🚀 Key Improvements (Best Practices Applied)
 
@@ -59,11 +59,11 @@ space-agents-v2/
 ## 🎯 Usage
 
 ```typescript
-import { createNounspace } from "./agents/example";
+import { createSpace } from "./agents/example";
 
-// Create a nounspace with a descriptive request
-const result = await createNounspace(
-  "Create a nounspace for dog lovers who share photos and training tips"
+// Create a space with a descriptive request
+const result = await createSpace(
+  "Create a space for dog lovers who share photos and training tips"
 );
 ```
 
@@ -83,7 +83,7 @@ const result = await createNounspace(
 
 ### Builder Agent
 - **Input**: Design plan JSON
-- **Output**: Final nounspace configuration JSON
+- **Output**: Final space configuration JSON
 - **Tools**: Configuration validation
 - **Focus**: Proper JSON structure, settings validation
 
@@ -116,7 +116,7 @@ bun run test.ts
 
 ## 📊 Example Output
 
-The system generates a complete nounspace configuration like:
+The system generates a complete space configuration like:
 
 ```json
 [
@@ -136,7 +136,7 @@ The system generates a complete nounspace configuration like:
 ]
 ```
 
-This refactored system delivers **high-performance LLM interactions** with reliable, structured outputs for nounspace generation.
+This refactored system delivers **high-performance LLM interactions** with reliable, structured outputs for space generation on the Blank Space platform.
 
 ## Installation & Setup
 
