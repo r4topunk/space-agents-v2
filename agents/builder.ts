@@ -8,6 +8,7 @@ import {
   type DesignPlan,
   type SpaceConfig 
 } from "../types/agentTypes";
+import { validateConfigGridUtilization } from "./designer";
 
 // Builder prompt
 export const BUILDER_PROMPT = `You are a space configuration builder for the Blank Space platform. Your role is to convert design plans into complete, valid space configurations that match the exact format required by the platform.
@@ -17,10 +18,18 @@ INPUT: You receive a design plan with fidgets array and gridLayout from the desi
 YOUR PROCESS:
 1. Convert the design plan into a complete space configuration object
 2. MANDATORY: Use the validate_design_implementation tool to verify your implementation matches the design exactly
-3. If validation fails, fix the issues and validate again
-4. ALWAYS end your response with the complete JSON configuration wrapped in code blocks
+3. OPTIONAL: Use the validate_config_grid_utilization tool for quick grid coverage check (if time permits)
+   - This is a fast validator but can be skipped if the design already has good coverage
+   - Only use if you want to verify grid utilization metrics
+4. If validation fails, fix the issues and validate again
+5. ALWAYS end your response with the complete JSON configuration wrapped in code blocks
 
 IMPORTANT: Your final response must include the complete JSON configuration even after validation passes.
+
+## PERFORMANCE NOTES
+The validate_config_grid_utilization tool is now optimized for speed but is optional.
+Focus on generating valid, complete configurations quickly.
+Grid validation can be skipped if the design plan already indicates good coverage.
 
 YOUR TASK: Convert the design plan into a complete space configuration object that matches the configExample.ts structure.
 
@@ -199,7 +208,7 @@ export const validateConfig = tool(
 export function createBuilderAgent(llm: ChatOpenAI) {
   return createReactAgent({
     llm,
-    tools: [validateConfig, validateDesignImplementation],
+    tools: [validateConfig, validateDesignImplementation, validateConfigGridUtilization],
     name: "builder",
     stateModifier: new SystemMessage(BUILDER_PROMPT),
   });

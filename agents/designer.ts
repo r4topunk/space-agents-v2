@@ -80,8 +80,15 @@ You MUST respond with a JSON object:
 4. Use galleries for visual appeal
 5. Consider adding chat for community interaction
 6. Ensure mobile-friendly layouts (avoid too many small fidgets)
+7. **CRITICAL**: Use validate_grid_utilization tool to ensure complete grid coverage
 
-Create a cohesive, user-friendly design that serves the community's needs.`;
+## VALIDATION WORKFLOW
+1. Create your design plan following the required JSON format
+2. Use validate_design for basic validation (format, constraints, minimum coverage)
+3. Use validate_grid_utilization for detailed grid analysis and optimization suggestions
+4. Iterate based on validation feedback until achieving 75%+ grid coverage
+
+Create a cohesive, user-friendly design that maximally utilizes the available grid space.`;
 
 // Validation tool for design output
 export const validateDesign = tool(
@@ -145,11 +152,174 @@ export const validateDesign = tool(
   }
 );
 
+// Grid utilization validator - ensures complete grid coverage (OPTIMIZED)
+export const validateGridUtilization = tool(
+  async ({ data }: { data: string }) => {
+    try {
+      let parsed: DesignPlan;
+      
+      // Simplified JSON parsing
+      try {
+        parsed = JSON.parse(data) as DesignPlan;
+      } catch (firstError) {
+        const unescapedData = data.replace(/\\\"/g, '"').replace(/\\\\/g, '\\');
+        try {
+          parsed = JSON.parse(unescapedData) as DesignPlan;
+        } catch (secondError) {
+          if (data.includes('{') && !data.trim().endsWith('}')) {
+            return `❌ Design plan JSON is truncated. Please ensure complete JSON is passed.`;
+          }
+          return `❌ JSON parsing failed. Please check JSON formatting.`;
+        }
+      }
+      
+      if (!parsed.fidgets) {
+        return "❌ Invalid design format. Missing fidgets array.";
+      }
+
+      const GRID_WIDTH = 12;
+      const GRID_HEIGHT = 8;
+      const TOTAL_CELLS = GRID_WIDTH * GRID_HEIGHT;
+      
+      let occupiedCells = 0;
+      let maxRowUsed = 0;
+      
+      // Simple validation without complex region analysis
+      for (const fidget of parsed.fidgets) {
+        const { x, y, width, height } = fidget.position;
+        
+        // Bounds check
+        if (x < 0 || y < 0 || x + width > GRID_WIDTH || y + height > GRID_HEIGHT) {
+          return `❌ ${fidget.id} exceeds grid bounds: (${x},${y}) ${width}×${height}`;
+        }
+        
+        // Minimum size check
+        const minSize = FIDGET_MIN_SIZES[fidget.type as keyof typeof FIDGET_MIN_SIZES];
+        if (minSize && (width < minSize.width || height < minSize.height)) {
+          return `❌ ${fidget.id} too small: ${width}×${height} (min: ${minSize.width}×${minSize.height})`;
+        }
+        
+        occupiedCells += width * height;
+        maxRowUsed = Math.max(maxRowUsed, y + height);
+      }
+      
+      const coveragePercentage = (occupiedCells / TOTAL_CELLS) * 100;
+      
+      // Quick assessment
+      if (coveragePercentage < 60) {
+        return `❌ Coverage too low: ${coveragePercentage.toFixed(1)}% (target: 75%+). Add more fidgets.`;
+      }
+      
+      if (maxRowUsed < GRID_HEIGHT - 1) {
+        return `⚠️  Using only ${maxRowUsed}/${GRID_HEIGHT} rows. Extend layout to use full height.`;
+      }
+      
+      if (coveragePercentage < 75) {
+        const needed = Math.ceil(TOTAL_CELLS * 0.75) - occupiedCells;
+        return `⚠️  ${coveragePercentage.toFixed(1)}% coverage. Add ~${needed} more cells to reach 75% target.`;
+      }
+      
+      return `✅ Grid utilization excellent: ${coveragePercentage.toFixed(1)}% coverage, using ${maxRowUsed}/${GRID_HEIGHT} rows`;
+      
+    } catch (error) {
+      const errorMsg = error instanceof Error ? error.message : String(error);
+      return `❌ Error: ${errorMsg}`;
+    }
+  },
+  {
+    name: "validate_grid_utilization",
+    description: "Fast validation of design plan grid coverage with optimization suggestions",
+    schema: z.object({ data: z.string() })
+  }
+);
+
+// Configuration grid utilization validator - analyzes final space configurations (OPTIMIZED)
+export const validateConfigGridUtilization = tool(
+  async ({ data }: { data: string }) => {
+    try {
+      let config;
+      
+      // Simplified JSON parsing - try direct first, then unescape if needed
+      try {
+        config = JSON.parse(data);
+      } catch (firstError) {
+        const unescapedData = data.replace(/\\\"/g, '"').replace(/\\\\/g, '\\');
+        try {
+          config = JSON.parse(unescapedData);
+        } catch (secondError) {
+          // Quick truncation check
+          if (data.includes('{') && !data.trim().endsWith('}')) {
+            return `❌ Configuration JSON is truncated. Please ensure complete JSON is passed.`;
+          }
+          return `❌ JSON parsing failed. Please check JSON formatting.`;
+        }
+      }
+      
+      if (!config.layoutDetails?.layoutConfig?.layout) {
+        return "❌ Invalid configuration format. Missing layout details.";
+      }
+
+      const GRID_WIDTH = 12;
+      const GRID_HEIGHT = 8;
+      const TOTAL_CELLS = GRID_WIDTH * GRID_HEIGHT;
+      
+      let occupiedCells = 0;
+      let maxRowUsed = 0;
+      let maxColUsed = 0;
+      const layoutItems = config.layoutDetails.layoutConfig.layout;
+      
+      // Simple cell counting without complex region analysis
+      for (const item of layoutItems) {
+        const { x, y, w: width, h: height } = item;
+        
+        // Bounds check
+        if (x < 0 || y < 0 || x + width > GRID_WIDTH || y + height > GRID_HEIGHT) {
+          return `❌ ${item.i} exceeds grid bounds: (${x},${y}) ${width}×${height}`;
+        }
+        
+        occupiedCells += width * height;
+        maxRowUsed = Math.max(maxRowUsed, y + height);
+        maxColUsed = Math.max(maxColUsed, x + width);
+      }
+      
+      const coveragePercentage = (occupiedCells / TOTAL_CELLS) * 100;
+      
+      // Quick assessment without expensive region finding
+      let result = `Grid Analysis: ${coveragePercentage.toFixed(1)}% coverage (${occupiedCells}/${TOTAL_CELLS} cells)\n`;
+      
+      if (coveragePercentage >= 75) {
+        result += `✅ GOOD: Grid utilization meets target (${coveragePercentage.toFixed(1)}%)`;
+        if (maxRowUsed < GRID_HEIGHT) {
+          result += `\n💡 Could extend to row ${GRID_HEIGHT - 1} for even better utilization`;
+        }
+      } else {
+        result += `⚠️  NEEDS IMPROVEMENT: ${coveragePercentage.toFixed(1)}% coverage (target: 75%+)\n`;
+        result += `� Using ${maxRowUsed}/${GRID_HEIGHT} rows, ${maxColUsed}/${GRID_WIDTH} columns\n`;
+        
+        const missingCells = Math.ceil(TOTAL_CELLS * 0.75) - occupiedCells;
+        if (missingCells > 0) {
+          result += `💡 Add ~${missingCells} more cells of content to reach 75% target`;
+        }
+      }
+      
+      return result;
+      
+    } catch (error) {
+      return `❌ Error: ${error instanceof Error ? error.message : String(error)}`;
+    }
+  },
+  {
+    name: "validate_config_grid_utilization",
+    description: "Fast validation of configuration grid coverage and optimization suggestions",
+    schema: z.object({ data: z.string() })
+  }
+);
+
 // Create and export the designer agent
 export function createDesignerAgent(llm: ChatOpenAI) {
   return createReactAgent({
     llm,
-    tools: [validateDesign],
+    tools: [validateDesign, validateGridUtilization],
     name: "designer", 
     stateModifier: new SystemMessage(DESIGNER_PROMPT),
   });
