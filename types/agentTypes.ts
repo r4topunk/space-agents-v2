@@ -46,6 +46,23 @@ export interface DesignPlan {
   rationale: string;
 }
 
+// New matrix-based design plan for improved performance
+export interface DesignMatrix {
+  width: number;  // Grid width (12)
+  height: number; // Grid height (8)
+  cells: (string | null)[][]; // Matrix where each cell contains fidget ID or null
+  fidgets: FidgetSpec[]; // List of fidgets with their types and settings
+  rationale: string;
+}
+
+export interface FidgetSpec {
+  id: string;
+  type: FidgetType;
+  purpose: string;
+  priority: 'high' | 'medium' | 'low';
+  settings: Record<string, any>;
+}
+
 export interface FidgetConfig {
   editable: boolean;
   settings: Record<string, any>;
