@@ -597,59 +597,70 @@ Thought-Provoking: Encourage creativity and reflection on how digital spaces can
 export const FIDGET_CONTEXT_CATALOG_PLANNER = `
 ## AVAILABLE FIDGET TYPES
 
-**text** - Rich text content with markdown support
-- Minimum Size: 3w × 2h
-- Settings: title, text (markdown), fontFamily, fontColor, headingsFontFamily, headingsFontColor, urlColor
+### Classic fidgets
 
-**gallery** - Display images from various sources  
-- Minimum Size: 2w × 2h
-- Settings: selectMediaSource (URL/Upload/NFT), imageUrl, scale, redirectionURL
+**text**
+- Purpose: Rich text content with markdown support, Hero sections, content blocks, instructions
+- Key Settings: title, text (markdown)
 
-**Video** - YouTube, Vimeo, and video embeds
-- Minimum Size: 2w × 2h
-- Settings: url (auto-converts YouTube/Vimeo URLs), size (scale)
+**gallery**
+- Purpose: Display images from various sources, Profile pictures, artwork displays, GIFs
+- Key Settings: selectMediaSource (URL), imageUrl, redirectionURL
 
-**feed** - Social media feeds with advanced filtering
-- Minimum Size: 4w × 2h
-- Settings: feedType (Following/Filter), filterType (Channel/Users/Keyword), channel, username, keyword, selectPlatform (Farcaster/X)
+**Video**
+- Purpose: Video content, tutorials, entertainment, presentations
+- Key Settings: url (auto-converts YouTube/Vimeo URLs)
 
-**cast** - Pin individual Farcaster posts
-- Minimum Size: 3w × 1h, Maximum Height: 4h
-- Settings: castUrl (easiest), castHash + casterFid (advanced)
+**iframe**
+- Purpose: Embed external websites and tools, dashboards, web apps, embedded services
+- Key Settings: url
 
-**Chat** - Interactive messaging interfaces
-- Minimum Size: 3w × 2h
-- Settings: roomName
+**links**
+- Purpose: Organized link collections with rich display options, navigation, resource collections, social media links, quick access
+- Key Settings: title, links (array with text/url/avatar/description), viewMode (list/grid), itemBackground
+- Display Options: List or grid layout with avatars and descriptions
+- Link Properties: Text, URL, optional avatar image, optional description
 
-**iframe** - Embed external websites and tools
-- Minimum Size: 2w × 2h
-- Settings: url, size (zoom level)
+**Rss**
+- Purpose: News feeds, blog content, external content aggregation
+- Key Settings: rssUrl
 
-**links** - Organized link collections with rich display options
-- Minimum Size: 2w × 2h
-- Settings: title, links (array with text/url/avatar/description), viewMode (list/grid)
+**Chat**
+- Purpose: Interactive messaging interfaces, community discussions
 
-**Rss** - RSS feed readers for external content
-- Minimum Size: 3w × 2h
-- Settings: rssUrl, fontFamily, fontColor, headingsFontFamily, headingsFontColor
+### On-chain
 
-**Swap** - Cryptocurrency trading interfaces
-- Minimum Size: 3w × 3h
-- Settings: defaultSellToken, defaultBuyToken, fromChain, toChain
+**Swap**
+- Purpose: Token swapping, DeFi interactions, trading
+- Key Settings: defaultSellToken, defaultBuyToken, fromChain, toChain
 
-**Portfolio** - Cryptocurrency portfolio tracking
-- Minimum Size: 3w × 3h
-- Settings: trackType (farcaster/address), farcasterUsername, walletAddresses
+**Portfolio**
+- Purpose: Wallet tracking, portfolio analytics, asset monitoring
+- Key Settings: trackType (farcaster/address), farcasterUsername, walletAddresses (ethereum address)
 
-**Market** - Cryptocurrency market data and pricing
-- Minimum Size: 3w × 2h
+**Market**
+- Purpose: Price chart display, market information, trading data
 
-**governance** - DAO proposals and voting interfaces
-- Minimum Size: 4w × 3h
+### Farcaster native
 
-**SnapShot** - Snapshot governance integration
-- Minimum Size: 4w × 3h
-- Settings: snapshotEns, daoContractAddress
+**feed**
+- Purpose: Social media streams, community content, trending posts
+- Key Settings: selectPlatform (Farcaster/X)
+- Feed Types: Following or Filter
+- Feed Filter Options: Channel feeds, user posts, keyword searches
+- Platform Support: Farcaster and X
+
+**cast**
+- Purpose: Pin individual Farcaster posts, highlight specific posts, feature announcements, showcase content
+- Key Settings: castUrl (easiest), castHash + casterFid (advanced)
+
+**frame**
+- Purpose: Legacy Farcaster frames, Simple interactive content, legacy frame apps
+- Key Settings: url
+
+**FramesV2** 
+- Purpose: (Farcaster Mini App) interactive frames, mini-apps
+- Key Settings: url, collapsed/expanded (preview mode), title, headingFont
 `;
 
 export const PLANING_SYSTEM = `
