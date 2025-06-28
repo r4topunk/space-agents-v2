@@ -3,7 +3,7 @@ import { z } from "zod";
 import { createReactAgent } from "@langchain/langgraph/prebuilt";
 import { ChatOpenAI } from "@langchain/openai";
 import { SystemMessage } from "@langchain/core/messages";
-import { TavilySearch } from "@langchain/tavily";
+// import { TavilySearch } from "@langchain/tavily";
 import { type ResearchData } from "../types/agentTypes";
 
 // Researcher prompt
@@ -72,7 +72,7 @@ export const validateResearch = tool(
 export function createResearcherAgent(llm: ChatOpenAI) {
   return createReactAgent({
     llm,
-    tools: [new TavilySearch(), validateResearch],
+    tools: [validateResearch],
     name: "researcher",
     stateModifier: new SystemMessage(RESEARCHER_PROMPT),
   });
