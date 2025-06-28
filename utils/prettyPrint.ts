@@ -1,5 +1,4 @@
 import { AIMessage, BaseMessage, isAIMessage } from "@langchain/core/messages";
-import "cheerio";
 
 export const prettyPrint = (message: BaseMessage | undefined) => {
   if (!message) {
